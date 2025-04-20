@@ -1,25 +1,25 @@
-package com.example.weatherappfinal// Final
+
+package com.example.weatherappfinal
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.weatherappfinal.ui.theme.WeatherAppFinalTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             WeatherAppFinalTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    WeatherHome(modifier = Modifier.padding(innerPadding))
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    WeatherAppNav()
                 }
             }
         }
@@ -27,26 +27,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun WeatherHome(modifier: Modifier = Modifier) {
-    var temperature by remember { mutableStateOf<String?>(null) }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Weather App", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = {
-            temperature = "72°F - Sunny"
-        }) {
-            Text("Get Weather")
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        if (temperature != null) {
-            Text(text = "Current Temperature: $temperature", style = MaterialTheme.typography.bodyLarge)
-        }
+fun WeatherAppNav() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = Screen.Welcome.route) {
+        composable(Screen.Welcome.route) { WelcomeScreen(navController) }
+        composable(Screen.MainMenu.route) { MainMenuScreen(navController) }
+        composable(Screen.Weather.route) { WeatherScreen() }
+        composable(Screen.Settings.route) { SettingsScreen() }
     }
 }
