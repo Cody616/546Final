@@ -85,7 +85,12 @@ fun WeatherScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Determine clothing suggestion based on temperature thresholds
-            val temperature = weather.main.temp
+            val temperature = if (useFahrenheit) {
+                (weather.main.temp * 9 / 5) + 32
+            } else {
+                weather.main.temp
+            }
+
             val clothingSuggestion = when {
                 temperature >= lightThreshold -> "Light Clothing"
                 temperature >= mediumThreshold -> "Medium Clothing"
