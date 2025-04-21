@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val dataStore = application.dataStore
 
+
     val lightClothingThreshold: Flow<Int> = dataStore.data
         .map { preferences -> preferences[PreferenceKeys.LIGHT_CLOTHING_THRESHOLD] ?: 20 }
 

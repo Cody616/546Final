@@ -21,6 +21,17 @@ fun WeatherScreen(
     val weatherState by weatherViewModel.weatherState.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val useFahrenheit by settingsViewModel.useFahrenheit.collectAsState(initial = false)
+
+    fun convertTemperature(tempC: Double, useFahrenheit: Boolean): String {
+        return if (useFahrenheit) {
+            val tempF = (tempC * 9 / 5) + 32
+            String.format("%.1f°F", tempF)
+        } else {
+            String.format("%.1f°C", tempC)
+        }
+    }
+
 
     // Retrieve user-defined temperature thresholds
     val lightThreshold by settingsViewModel.lightClothingThreshold.collectAsState(initial = 20)
@@ -66,7 +77,7 @@ fun WeatherScreen(
 
         weatherState?.let { weather ->
             Text("City: ${weather.name}")
-            Text("Temperature: ${weather.main.temp}°C")
+            Text("Temperature: ${convertTemperature(weather.main.temp, useFahrenheit)}")
             Text("Humidity: ${weather.main.humidity}%")
             Text("Wind Speed: ${weather.wind.speed} m/s")
             Text("Description: ${weather.weather.firstOrNull()?.description ?: "N/A"}")
