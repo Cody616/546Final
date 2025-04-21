@@ -72,6 +72,8 @@ android {
             implementation("com.squareup.retrofit2:converter-gson:2.9.0")
             implementation("com.google.android.gms:play-services-location:18.0.0")
             implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+            implementation("androidx.datastore:datastore-preferences:1.1.4")
+
         }
 
     }

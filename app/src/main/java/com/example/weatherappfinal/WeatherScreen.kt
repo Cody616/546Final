@@ -13,11 +13,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
+fun WeatherScreen(
+    weatherViewModel: WeatherViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel()
+) {
     var cityName by remember { mutableStateOf("") }
     val weatherState by weatherViewModel.weatherState.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    // Retrieve user-defined temperature thresholds
+    val lightThreshold by settingsViewModel.lightClothingThreshold.collectAsState(initial = 20)
+    val mediumThreshold by settingsViewModel.mediumClothingThreshold.collectAsState(initial = 15)
+    val heavyThreshold by settingsViewModel.heavyClothingThreshold.collectAsState(initial = 5)
 
     Column(
         modifier = Modifier
@@ -62,6 +70,18 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
             Text("Humidity: ${weather.main.humidity}%")
             Text("Wind Speed: ${weather.wind.speed} m/s")
             Text("Description: ${weather.weather.firstOrNull()?.description ?: "N/A"}")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Determine clothing suggestion based on temperature thresholds
+            val temperature = weather.main.temp
+            val clothingSuggestion = when {
+                temperature >= lightThreshold -> "Light Clothing"
+                temperature >= mediumThreshold -> "Medium Clothing"
+                else -> "Heavy Clothing"
+            }
+
+            Text("Suggested Clothing: $clothingSuggestion")
         }
     }
 }
